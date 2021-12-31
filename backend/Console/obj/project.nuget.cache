@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ry5xugtUFPOraN114L02sbilv8wJzcZfGQcG2bhncigiSNkWiqpdz5cR5E9iUVU5zyBweW9d/bvFUvP6bflhOQ==",
+  "success": true,
+  "projectFilePath": "/Users/gadoevalex/wishlist-asp/Console/Console.csproj",
+  "expectedPackageFiles": [
+    "/Users/gadoevalex/.nuget/packages/autofac/6.3.0/autofac.6.3.0.nupkg.sha512",
+    "/Users/gadoevalex/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
+    "/Users/gadoevalex/.nuget/packages/system.diagnostics.diagnosticsource/4.7.1/system.diagnostics.diagnosticsource.4.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -2,8 +2,7 @@ using System;
 
 namespace Core {
 
-    public class User {
-        public int Id {get; set;}
+    public class User : Entity {
         public string Name {get; set;}
         
     }

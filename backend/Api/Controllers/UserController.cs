@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Core.UseCases;
+using Core;
 
 namespace Api.Controllers {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase {
 
-        [HttpGet]
-        public IEnumerable<object> Get() {
+        private readonly IDbContext<User> _usersStorage;
+
+        public UserController(
+            IDbContext<User> usersStorage
+        ) {
+            _usersStorage = usersStorage;
+        }
+
+        [HttpPost]
+        public IEnumerable<object> Register() {
+            Console.WriteLine(_usersStorage);
             return new object[] {};
         }
     }

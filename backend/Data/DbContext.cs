@@ -31,7 +31,7 @@ namespace Data {
     }
 
 
-    public class DbContext<T> : IDbContext {
+    public class DbContext<T> : IDbContext<T> where T : Entity {
 
         private readonly string _fileName;
         private readonly IFileSystem _fs;
@@ -73,7 +73,11 @@ namespace Data {
             Commit();
         }
 
-        private void Commit () {
+        public T? GetById(int id) {
+            return items.Find(item => item.Id == id);
+        }
+
+        public void Commit () {
             var usersString = items.Select(user => JsonSerializer.Serialize(user)).Aggregate((a, b) => a + "\n" + b);
             _fs.WriteAllText(_path, usersString);
         }

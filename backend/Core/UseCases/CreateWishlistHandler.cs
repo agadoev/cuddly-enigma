@@ -4,25 +4,29 @@ using Core;
 
 namespace Core.UseCases {
 
-    public interface IDbContext<T> {
-
-    }
 
     public class CreateWishlistCommand {
-        User user;
-        IEnumerable<Item> Items;
+        public User user;
+        public IEnumerable<Item> Items;
     }
 
     public class CreateWishlistHandler {
 
+        private readonly IDbContext<Wishlist> _wishlishContext;
 
-        public CreateWishlistHandler() {
-            var wishlistContext = new 
+        public CreateWishlistHandler(IDbContext<Wishlist> wishlistContext) {
+            _wishlishContext = wishlistContext;
         }
 
         public void Run(CreateWishlistCommand command) {
 
-            
+            var wishlist = new Wishlist() {
+                Id = 12,
+                UserId = command.user.Id,
+                Items = command.Items
+            };
+
+            _wishlishContext.Add(wishlist);
         }        
     }
 }

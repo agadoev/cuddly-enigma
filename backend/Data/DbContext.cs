@@ -1,9 +1,8 @@
-using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using Core;
 using Core.UseCases;
 
@@ -23,11 +22,25 @@ namespace Data {
 
         public bool FileExists(string path) => File.Exists(path);
 
-        public void CreateFile(string path) => File.Create(path);
+        public void CreateFile(string path) {
+            using (var fs = File.Create(path)) {}
+        }
 
-        public string[] ReadAllLines(string path) => File.ReadAllLines(path);
+        public string[] ReadAllLines(string path) {
+            var lines = new List<string>();
+            using (var sr = new StreamReader(path)) {
+                string line;
 
-        public void WriteAllText(string path, string text) => File.WriteAllText(path, text);
+                while ((line = sr.ReadLine()) != null)
+                    lines.Add(line);
+            }
+
+            return lines.ToArray();
+        }
+
+        public void WriteAllText(string path, string text) {
+            File.WriteAllText(path, text);
+        }
     }
 
 
@@ -43,7 +56,7 @@ namespace Data {
         ) {
             items = new List<T>();
             _fs = fileSystem;
-            _path = Path.Join(Directory.GetCurrentDirectory(), typeof(T).ToString());
+            _path = Path.Join("/Users/gadoevalex/wishlist/backend/Data", typeof(T).ToString());
 
             if (!_fs.FileExists(_path))
                 _fs.CreateFile(_path);

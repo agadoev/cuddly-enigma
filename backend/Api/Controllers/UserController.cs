@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Core.UseCases;
+using Api.Dtos;
 using Core;
 
 namespace Api.Controllers {
             
-    public class UserDto {
-        public string Name {get; set;}
-    }
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase {

@@ -44,14 +44,14 @@ namespace Data {
     }
 
 
-    public class DbContext<T> : IDbContext<T> where T : Entity {
+    public class FileSystemContext<T> : IDbContext<T> where T : Entity {
 
         private readonly string _fileName;
         private readonly IFileSystem _fs;
         private readonly string _path;
         private List<T> items{get; set;}
 
-        public DbContext(
+        public FileSystemContext(
             IFileSystem fileSystem
         ) {
             items = new List<T>();

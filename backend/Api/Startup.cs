@@ -25,8 +25,9 @@ namespace Api
 
             services.AddCors();
             services.AddControllers();
-            services.AddScoped<IDbContext<User>, DbContext<User>>();
+            // services.AddScoped<IDbContext<User>, SqliteContext<User>>();
             services.AddScoped<IFileSystem, FileSystem>();
+            services.AddSingleton<IConfiguration>(Configuration);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });

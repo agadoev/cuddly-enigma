@@ -8,7 +8,7 @@ using Moq;
 namespace Tests {
     public class DbContextTests {
 
-        private DbContext<User> _uc;
+        private FileSystemContext<User> _uc;
         private Mock<IFileSystem> _fileSystem;
 
         private string _path;
@@ -16,7 +16,7 @@ namespace Tests {
         [SetUp]
         public void SetUp() {
             _fileSystem = new Mock<IFileSystem>();
-            _uc = new DbContext<User>(_fileSystem.Object);
+            _uc = new FileSystemContext<User>(_fileSystem.Object);
             _path = _uc.GetPath();
         }
 

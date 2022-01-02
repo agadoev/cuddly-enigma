@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Collections;
 using Core;
+using Core.Abstractions;
 
 namespace Core.UseCases {
 
-
-    public class CreateWishlistCommand {
+    public class CreateWishlistCommand : IRequest {
         public User user;
         public IEnumerable<Item> Items;
     }
 
-    public class CreateWishlistHandler {
+    public class CreateWishlistHandler : IRequestHandler<CreateWishlistCommand> {
 
         private readonly IDbContext<Wishlist> _wishlishContext;
 
@@ -18,7 +18,7 @@ namespace Core.UseCases {
             _wishlishContext = wishlistContext;
         }
 
-        public void Run(CreateWishlistCommand command) {
+        public void Handle(CreateWishlistCommand command) {
 
             var wishlist = new Wishlist() {
                 Id = 12,

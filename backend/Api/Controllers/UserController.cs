@@ -5,6 +5,11 @@ using Core.UseCases;
 using Core;
 
 namespace Api.Controllers {
+            
+    public class UserDto {
+        public string Name {get; set;}
+    }
+
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase {
@@ -18,9 +23,9 @@ namespace Api.Controllers {
         }
 
         [HttpPost]
-        public IEnumerable<object> Register() {
-            Console.WriteLine(_usersStorage);
-            return new object[] {};
+        public IActionResult Register([FromBody]UserDto dto) {
+            Console.WriteLine(dto.Name);
+            return Ok();
         }
     }
 }

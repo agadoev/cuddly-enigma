@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Data;
-using Core;
-using Core.UseCases;
+using Application.UseCases;
+using Application.Repositories;
+using Infrastructure.InMemoryDataAcces.Repositories;
+using Infrastructure.InMemoryDataAcces;
+using Application.UseCases.RegisterUser;
 
 namespace Api
 {
@@ -25,9 +27,10 @@ namespace Api
 
             services.AddCors();
             services.AddControllers();
-            // services.AddScoped<IDbContext<User>, SqliteContext<User>>();
-            services.AddScoped<IFileSystem, FileSystem>();
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddScoped<IUseCase<RegisterUserInput, RegisterUserOutput>, RegisterUserUseCase>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });

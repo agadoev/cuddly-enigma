@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
-using Core.UseCases;
 using Api.Dtos;
-using Core;
-using Data;
+using Application.UseCases;
+using Application.UseCases.RegisterUser;
+using System.Net;
 
 namespace Api.Controllers {
             
@@ -11,17 +11,15 @@ namespace Api.Controllers {
     [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase {
 
-        private readonly IDbContext<User> _usersStorage;
         private readonly IConfiguration _configuration;
-        private readonly SqliteContext _context;
+        private readonly IUseCase<RegisterUserInput, RegisterUserOutput> _useCase;
 
         public UserController(
-            IDbContext<User> usersStorage,
-            IConfiguration configuration
-        ) {
-            _usersStorage = usersStorage;
+            IConfiguration configuration,
+            IUseCase<RegisterUserInput, RegisterUserOutput> registerUserUseCase
+        ) { 
             _configuration = configuration;
-            _context = new SqliteContext(); 
+            _useCase = registerUserUseCase;
         }
 
         [HttpGet]
@@ -31,7 +29,13 @@ namespace Api.Controllers {
         [HttpPost]
         public IActionResult Register([FromBody]UserDto dto) {
 
-            return Ok();
+            var input = new RegisterUserInput() {
+                Name = dto.Name
+            };
+
+            var output = _useCase.Execute(input);
+
+            return output.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

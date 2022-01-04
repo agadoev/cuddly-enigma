@@ -27,11 +27,24 @@ namespace Application.UseCases {
         private readonly IUserRepository _userRepository;
         private readonly IWishesRepository _wishesRepository;
 
+        public ReserveWishHandler(
+            IReservationRepository reservationRepository,
+            IUserRepository userRepository,
+            IWishesRepository wishesRepository
+        ) {
+            _reservationRepository = reservationRepository;
+            _userRepository = userRepository;
+            _wishesRepository = wishesRepository;
+        }
+
         public ReserveWishCommand Execute(ReserveWishCommand command) {
 
             var reserver = _userRepository.Get(command.ReserverId);
 
             var wish = _wishesRepository.Get(command.WishId);
+
+            if (wish.Reserved)
+                throw new ArgumentException("Wish is already reserved");
 
             var reservation = new Reservation(reserver, wish);
 

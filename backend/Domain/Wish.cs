@@ -5,5 +5,7 @@ namespace Domain {
         public string Title {get; set;}
 
         public string Url {get; set;}
+
+        public bool Reserved {get; set;}
     }
 }

@@ -48,8 +48,7 @@ namespace Api.Controllers {
 
             // мапим DTO в Input
             input.UserId = dto.UserId;
-            input.Wish = new Domain.Wish();
-            input.Wish.Title = dto.WishDto.Title;
+            input.WishTitle = dto.WishDto.Title;
 
             var output = _createWishUseCase.Execute(input);
 

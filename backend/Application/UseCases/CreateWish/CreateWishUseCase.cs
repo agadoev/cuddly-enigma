@@ -1,4 +1,7 @@
+using System;
+using System.Data;
 using Application.UseCases;
+using Domain;
 using Application.Repositories;
 
 namespace Application.UseCases.CreateWish {
@@ -14,18 +17,25 @@ namespace Application.UseCases.CreateWish {
         }        
 
         public CreateWishOutput Execute(CreateWishInput input) {
-            var output = new CreateWishOutput();
 
+            if (string.IsNullOrEmpty(input.WishTitle))
+                throw new ArgumentNullException("У объекта Wish должно быть заполенно property Title");
 
             var user = _repository.Get(input.UserId);
 
-            // кинуть исключение NotFound..
+            if (user is null)
+                throw new RowNotInTableException("Пользователь не найден");
 
-            user.Wishlist.Add(input.Wish);
+            var wish = new Wish() {
+                Title = input.WishTitle,
+                Url = input.WishUrl
+            };
 
+            user.Wishlist.Add(wish);
+
+            var output = new CreateWishOutput();
             output.Success = true;
             return output;
-            
         }
     }
 }

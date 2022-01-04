@@ -1,6 +1,7 @@
 using Application.Repositories;
 using Domain;
 using System.Linq;
+using System;
 using System.Collections.Generic;
 
 
@@ -16,6 +17,10 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
 
         public void Add(User user) {
             (_context.Users as List<User>).Add(user);
+        }
+
+        public User Get(Guid id) {
+            return (_context.Users as List<User>).Find(x => x.Id == id);
         }
     }
 }

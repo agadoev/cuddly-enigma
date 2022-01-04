@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Domain {
@@ -7,6 +8,7 @@ namespace Domain {
         public List<Wish> Wishlist {get; set;}
 
         public User() {
+            Id = Guid.NewGuid();
             Wishlist = new List<Wish>();
         }
 

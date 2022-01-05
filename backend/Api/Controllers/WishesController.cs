@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
@@ -9,18 +10,21 @@ namespace Api.Controllers {
     [Route("api/[controller]/[action]")]
     public class WishesController : ControllerBase {
 
-        private readonly ICommandHandler<ReserveWishCommand> _reserveWishHandler;
-        private readonly ICommandHandler<CreateWishCommand> _createWishHandler;
-        private readonly ICommandHandler<RemoveWishCommand> _removeWishHandler;
+        private readonly ICommandHandler<GetWishesByUserCommand> _getWishesByUser;
+        private readonly ICommandHandler<ReserveWishCommand> _reserveWish;
+        private readonly ICommandHandler<CreateWishCommand> _createWish;
+        private readonly ICommandHandler<RemoveWishCommand> _removeWish;
 
         public WishesController(
             ICommandHandler<ReserveWishCommand> reserveWishHandler,
             ICommandHandler<CreateWishCommand> createWishHandler,
-            ICommandHandler<RemoveWishCommand> removeWishHandler
+            ICommandHandler<RemoveWishCommand> removeWishHandler,
+            ICommandHandler<GetWishesByUserCommand> getWishesByUser
         ) {
-            _reserveWishHandler = reserveWishHandler;
-            _createWishHandler = createWishHandler;
-            _removeWishHandler = removeWishHandler;
+            _reserveWish = reserveWishHandler;
+            _createWish = createWishHandler;
+            _removeWish = removeWishHandler;
+            _getWishesByUser = getWishesByUser;
         }
 
 
@@ -33,7 +37,7 @@ namespace Api.Controllers {
                 command.WishTitle = dto.Title;
                 command.WishUrl = dto.Url;
             
-                _createWishHandler.Execute(command);
+                _createWish.Execute(command);
 
                 return Ok();
             } catch (Exception ex) {
@@ -44,7 +48,21 @@ namespace Api.Controllers {
 
         [HttpGet]
         public WishDto[] GetUserWishList([FromQuery]string userId) {
-            return new WishDto[] {};
+
+            try {
+                var command = new GetWishesByUserCommand();
+
+                command.UserId = new Guid(userId);
+
+                _getWishesByUser.Execute(command);
+
+                var dtos = command.Wishes.Select(w => new WishDto { Title = w.Title, Url = w.Url }).ToArray();
+                
+                return dtos;
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         [HttpPut]
@@ -60,7 +78,7 @@ namespace Api.Controllers {
                 command.WishId = new Guid(wishId);
                 command.UserId = new Guid(userId);
 
-                _removeWishHandler.Execute(command);
+                _removeWish.Execute(command);
 
                 return Ok();
             } catch (Exception ex) {
@@ -77,7 +95,7 @@ namespace Api.Controllers {
             command.ReserverId = dto.ReservedId;
             command.WishId = dto.WishId;    
 
-            command = _reserveWishHandler.Execute(command);
+            command = _reserveWish.Execute(command);
             return Ok();
         }
 

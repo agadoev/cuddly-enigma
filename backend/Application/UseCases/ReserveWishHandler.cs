@@ -1,6 +1,5 @@
 using System;
 using Domain;
-using Application.UseCases;
 using Application.Repositories;
 
 namespace Application.UseCases {

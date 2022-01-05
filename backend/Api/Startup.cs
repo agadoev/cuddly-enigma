@@ -33,6 +33,7 @@ namespace Api
             services.AddScoped<ICommandHandler<CreateWishCommand>, CreateWishHandler>();
             services.AddScoped<ICommandHandler<RemoveWishCommand>, RemoveWishHandler>();
             services.AddScoped<ICommandHandler<ReserveWishCommand>, ReserveWishHandler>();
+            services.AddScoped<ICommandHandler<GetWishesByUserCommand>, GetWishesByUserHandler>();
 
             // repositories
             services.AddScoped<IUserRepository, UserRepository>();

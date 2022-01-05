@@ -1,6 +1,7 @@
 using Domain;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Application.Repositories;
 
 namespace Infrastructure.InMemoryDataAcces.Repositories {
@@ -13,6 +14,10 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
 
         public void Add(Wish wish) {
             _context.Wishes.Add(wish);
+        }
+
+        public IEnumerable<Wish> GetByUser(Guid userId) {
+            return _context.Wishes.Where(x => x.UserId == userId);
         }
 
         public void Remove(Guid id) {

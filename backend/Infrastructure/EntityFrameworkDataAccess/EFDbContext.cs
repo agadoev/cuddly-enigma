@@ -7,9 +7,15 @@ namespace Infrastructure.EntityFrameworkDataAccess {
 
         public DbSet<UserEntity> Users {get; set;}
 
+        public DbSet<WishEntity> Wishes {get; set;}
+
+        public DbSet<ReservationEntity> Reservations {get; set;}
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=wish.db");
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            // modelBuilder.Entity<UserEntity> ()
-            //     .ToTable ("Users");
+            modelBuilder.Entity<UserEntity> ()
+                .ToTable ("Users");
         }
     }
 }

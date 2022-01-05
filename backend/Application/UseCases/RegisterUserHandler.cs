@@ -4,8 +4,6 @@ using System;
 
 namespace Application.UseCases {
 
-
-
     public class RegisterUserCommand {
         public bool Success {get; set;}
         public bool Done {get; set;}

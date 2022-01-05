@@ -6,5 +6,7 @@ namespace Application.Repositories {
         void Add(Wish wish);
 
         Wish Get(Guid id);
+
+        void Remove(Guid id);
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using Application.UseCases;
 using Domain;
 using Application.Repositories;
 
@@ -28,7 +27,8 @@ namespace Application.UseCases.CreateWish {
 
             var wish = new Wish() {
                 Title = input.WishTitle,
-                Url = input.WishUrl
+                Url = input.WishUrl,
+                UserId = user.Id
             };
 
             user.Wishlist.Add(wish);

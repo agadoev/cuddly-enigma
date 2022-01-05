@@ -1,4 +1,4 @@
-
+using System;
 
 namespace Domain {
     public class Wish : Entity {
@@ -7,5 +7,6 @@ namespace Domain {
         public string Url {get; set;}
 
         public bool Reserved {get; set;}
+        public Guid UserId {get; set;}
     }
 }

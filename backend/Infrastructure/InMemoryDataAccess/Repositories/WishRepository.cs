@@ -15,6 +15,10 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
             _context.Wishes.Add(wish);
         }
 
+        public void Remove(Guid id) {
+            _context.Wishes.Remove(Get(id));
+        }
+
         public Wish Get(Guid id) {
             return _context.Wishes.First(x => x.Id == id);
         }

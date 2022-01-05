@@ -16,6 +16,8 @@ namespace Application.UseCases {
         public RemoveWishCommand() {
             Success = false;
             Done = false;
+            WishId = Guid.Empty;
+            UserId = Guid.Empty;
         }
     }
 
@@ -32,6 +34,9 @@ namespace Application.UseCases {
         public RemoveWishCommand Execute(RemoveWishCommand command) {
 
             var wish = _wishesRepository.Get(command.WishId);
+
+            if (wish is null)
+                throw new RowNotInTableException();
 
             if (wish.UserId != command.UserId)
                 throw new UnauthorizedAccessException();

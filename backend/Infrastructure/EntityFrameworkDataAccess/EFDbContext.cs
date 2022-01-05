@@ -15,7 +15,14 @@ namespace Infrastructure.EntityFrameworkDataAccess {
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<UserEntity> ()
-                .ToTable ("Users");
+                .ToTable ("Users")
+                .HasMany<WishEntity>();
+                
+            modelBuilder.Entity<WishEntity> ()
+                .ToTable("Wishes");
+
+            modelBuilder.Entity<ReservationEntity> ()
+                .ToTable("Reservations");
         }
     }
 }

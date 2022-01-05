@@ -8,6 +8,7 @@ using Application.UseCases;
 using Application.Repositories;
 using Infrastructure.InMemoryDataAcces.Repositories;
 using Infrastructure.InMemoryDataAcces;
+using Infrastructure.EntityFrameworkDataAccess;
 
 namespace Api
 {
@@ -41,6 +42,7 @@ namespace Api
             services.AddScoped<IReservationRepository, ReservationRepository>();
 
             services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());
+            services.AddSingleton<EFDbContext>(new ContextFactory().CreateDbContext(new string[] {Configuration.GetConnectionString("DEV")}));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });

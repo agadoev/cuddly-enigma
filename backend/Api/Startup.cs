@@ -27,9 +27,18 @@ namespace Api
             services.AddCors();
             services.AddControllers();
             services.AddSingleton<IConfiguration>(Configuration);
+
+            // handlers
             services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserHandler>();
             services.AddScoped<ICommandHandler<CreateWishCommand>, CreateWishHandler>();
+            services.AddScoped<ICommandHandler<RemoveWishCommand>, RemoveWishHandler>();
+            services.AddScoped<ICommandHandler<ReserveWishCommand>, ReserveWishHandler>();
+
+            // repositories
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWishesRepository, WishRepository>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+
             services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());
             services.AddSwaggerGen(c =>
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
@@ -30,28 +31,22 @@ namespace Api.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody]UserDto dto) {
+        public JsonResult Register([FromBody]UserDto dto) {
 
-            var command = new RegisterUserCommand() {
-                Username = dto.Name
-            };
+            try {
+                var command = new RegisterUserCommand() {
+                    Username = dto.Name
+                };
 
-            var output = _registerUserHandler.Execute(command);
+                _registerUserHandler.Execute(command);
 
-            return output.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
-        }
+                return new JsonResult(new { id = command.Id});
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return null;
+            }
 
-        [HttpPost]
-        public IActionResult CreateWish([FromBody]CreateWishDto dto) {
-            var command = new CreateWishCommand();
-
-            // мапим DTO в Input
-            command.UserId = dto.UserId;
-            command.WishTitle = dto.WishDto.Title;
-
-            _createWishHandler.Execute(command);
-
-            return command.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

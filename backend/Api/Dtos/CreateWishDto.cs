@@ -5,6 +5,9 @@ namespace Api.Dtos {
 
         public Guid UserId {get; set;}
 
-        public WishDto WishDto {get; set;}
+        public string Title {get; set;}
+        public string Url {get ;set;}
+
+        public Guid CreatedWishId { get; set;}
     }
 }

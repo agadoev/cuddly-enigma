@@ -8,7 +8,6 @@ using Application.UseCases;
 using Application.Repositories;
 using Infrastructure.InMemoryDataAcces.Repositories;
 using Infrastructure.InMemoryDataAcces;
-using Application.UseCases.RegisterUser;
 using Application.UseCases.CreateWish;
 
 namespace Api
@@ -29,7 +28,7 @@ namespace Api
             services.AddCors();
             services.AddControllers();
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddScoped<IUseCase<RegisterUserInput, RegisterUserOutput>, RegisterUserUseCase>();
+            services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserHandler>();
             services.AddScoped<IUseCase<CreateWishInput, CreateWishOutput>, CreateWishUseCase>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());

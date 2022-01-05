@@ -46,6 +46,8 @@ namespace Application.UseCases {
             if (wish.Reserved)
                 throw new ArgumentException("Wish is already reserved");
 
+            wish.Reserved = true;
+
             var reservation = new Reservation(reserver, wish);
 
             _reservationRepository.Add(reservation);

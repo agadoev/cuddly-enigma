@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
-using Application.UseCases.RegisterUser;
 using Application.UseCases.CreateWish;
 using System.Net;
 
@@ -13,31 +12,32 @@ namespace Api.Controllers {
     public class UserController : ControllerBase {
 
         private readonly IConfiguration _configuration;
-        private readonly IUseCase<RegisterUserInput, RegisterUserOutput> _useCase;
+        private readonly ICommandHandler<RegisterUserCommand> _registerUserHandler;
         private readonly IUseCase<CreateWishInput, CreateWishOutput> _createWishUseCase;
 
         public UserController(
             IConfiguration configuration,
-            IUseCase<RegisterUserInput, RegisterUserOutput> registerUserUseCase,
+            ICommandHandler<RegisterUserCommand> registerUserHandler,
             IUseCase<CreateWishInput, CreateWishOutput> createWishUseCase
         ) { 
             _configuration = configuration;
-            _useCase = registerUserUseCase;
+            _registerUserHandler = registerUserHandler;
             _createWishUseCase = createWishUseCase;
         }
 
         [HttpGet]
         public void GetAll() {
+
         }
 
         [HttpPost]
         public IActionResult Register([FromBody]UserDto dto) {
 
-            var input = new RegisterUserInput() {
-                Name = dto.Name
+            var command = new RegisterUserCommand() {
+                Username = dto.Name
             };
 
-            var output = _useCase.Execute(input);
+            var output = _registerUserHandler.Execute(command);
 
             return output.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
         }

@@ -29,7 +29,6 @@ namespace Application.UseCases {
                 throw new ArgumentNullException();
 
             command.Wishes = _wishesRepository.GetByUser(command.UserId.Value);
-            
             command.Success = true;
             command.Done = true;
 

@@ -43,9 +43,9 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
 
         public IEnumerable<Wish> GetByUser(Guid userId) {
             
-            var wishEntities = _context.Wishes.Where(w => w.UserId == userId);
+            var wishEntities = _context.Wishes.Where(w => w.UserId == userId).AsEnumerable().ToList();
 
-            var wishes = wishEntities.Select(w => new Wish {
+            var wishes = wishEntities.Select(w => new Wish() {
                 Id = w.Id,
                 Title = w.Title,
                 Url = w.Url,

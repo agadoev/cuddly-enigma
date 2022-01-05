@@ -56,7 +56,7 @@ namespace Api.Controllers {
 
                 _getWishesByUser.Execute(command);
 
-                var dtos = command.Wishes.Select(w => new WishDto { Title = w.Title, Url = w.Url }).ToArray();
+                var dtos = command.Wishes.Select(w => new WishDto { Title = w.Title, Url = w.Url, WishId = w.Id, UserId = w.UserId }).ToArray();
                 
                 return dtos;
             } catch (Exception ex) {

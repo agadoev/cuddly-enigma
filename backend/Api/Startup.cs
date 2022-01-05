@@ -9,6 +9,7 @@ using Application.Repositories;
 using Infrastructure.InMemoryDataAcces.Repositories;
 using Infrastructure.InMemoryDataAcces;
 using Infrastructure.EntityFrameworkDataAccess;
+using Infrastructure.EntityFrameworkDataAccess.Repositories;
 
 namespace Api
 {
@@ -37,9 +38,9 @@ namespace Api
             services.AddScoped<ICommandHandler<GetWishesByUserCommand>, GetWishesByUserHandler>();
 
             // repositories
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IWishesRepository, WishRepository>();
-            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IUserRepository, Infrastructure.EntityFrameworkDataAccess.Repositories.UserRepository>();
+            services.AddScoped<IWishesRepository, Infrastructure.EntityFrameworkDataAccess.Repositories.WishesRepository>();
+            services.AddScoped<IReservationRepository, Infrastructure.EntityFrameworkDataAccess.Repositories.ReservationRepository>();
 
             services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());
             services.AddSingleton<EFDbContext>(new ContextFactory().CreateDbContext(new string[] {Configuration.GetConnectionString("DEV")}));

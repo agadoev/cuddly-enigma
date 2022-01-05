@@ -3,7 +3,7 @@ using System.Linq;
 using Domain;
 using Application.Repositories;
 using Infrastructure.Entities;
-using Infrastructure.EntityFrameworkDataAccess;
+using System.Collections.Generic;
 
 namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
     public class UserRepository : IUserRepository {
@@ -27,10 +27,14 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
             };
             
             _context.Users.Add(userEntity);
+
+            _context.SaveChanges();
         }
 
         public User Get(Guid id) {
             var userEntity = _context.Users.Find(id);
+
+            userEntity.Wishes ??= new List<WishEntity>();
 
             // вынести эту хуйню в отдельный класс маппер
             var user = new User {

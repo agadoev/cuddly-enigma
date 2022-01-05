@@ -23,6 +23,9 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
             };
 
             _context.Wishes.Add(wishEntity);
+
+            _context.SaveChanges();
+
         }
 
         public Wish Get(Guid id) {
@@ -54,6 +57,8 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
 
         public void Remove(Guid id) {
             _context.Wishes.Remove(_context.Wishes.Find(id));
+
+            _context.SaveChanges();
         }
     }
 }

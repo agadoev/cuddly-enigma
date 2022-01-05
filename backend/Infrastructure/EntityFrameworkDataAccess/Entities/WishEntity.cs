@@ -3,12 +3,11 @@ using System;
 namespace Infrastructure.Entities {
     public class WishEntity : Entity {
 
-        public string Title;
+        public string Title {get; set;}
 
-        public string Url;
+        public string Url {get; set;}
 
-        public Guid UserId;
-        public Guid User;
-
+        public Guid UserId {get; set;}
+        public UserEntity User {get; set;}
     }
 }

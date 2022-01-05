@@ -1,3 +1,9 @@
+import axios from 'axios';
+
+export const registerUser = () => {
+
+}
+
 
 export class Backend {
 

@@ -57,17 +57,18 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("UserEntityId")
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("UserEntityId1")
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEntityId");
-
-                    b.HasIndex("UserEntityId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Wishes");
                 });
@@ -93,13 +94,13 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Entities.WishEntity", b =>
                 {
-                    b.HasOne("Infrastructure.Entities.UserEntity", null)
+                    b.HasOne("Infrastructure.Entities.UserEntity", "User")
                         .WithMany("Wishes")
-                        .HasForeignKey("UserEntityId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Infrastructure.Entities.UserEntity", null)
-                        .WithMany()
-                        .HasForeignKey("UserEntityId1");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.UserEntity", b =>

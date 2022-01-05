@@ -7,7 +7,7 @@ namespace Infrastructure.EntityFrameworkDataAccess {
     public class ContextFactory : IDesignTimeDbContextFactory<EFDbContext> {
         public EFDbContext CreateDbContext(string[] args) {
             var optionsBuilder = new DbContextOptionsBuilder<EFDbContext>();
-            optionsBuilder.UseSqlite("Data Source=wish.db");
+            optionsBuilder.UseSqlite("Data Source=/Users/gadoevalex/wishlist/backend/Infrastructure/wish.db");
 
             return new EFDbContext(optionsBuilder.Options);
         }

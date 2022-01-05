@@ -1,6 +1,7 @@
 using Application.Repositories;
 using Domain;
 using System;
+using System.Collections.Generic;
 
 namespace Application.UseCases {
 
@@ -32,9 +33,10 @@ namespace Application.UseCases {
 
             var user = new User() {
                 Name = command.Username,
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                Wishlist = new List<Wish>()
             };
-
+            
             _repository.Add(user);
 
             command.Id = user.Id;

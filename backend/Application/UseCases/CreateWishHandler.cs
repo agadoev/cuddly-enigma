@@ -31,11 +31,14 @@ namespace Application.UseCases {
     public class CreateWishHandler : ICommandHandler<CreateWishCommand> {
 
         private readonly IUserRepository _repository;
+        private readonly IWishesRepository _wishRepository;
 
         public CreateWishHandler(
-            IUserRepository repository
+            IUserRepository repository,
+            IWishesRepository wishesRepository
         ) {
             _repository = repository;
+            _wishRepository = wishesRepository;
         }        
 
         public CreateWishCommand Execute(CreateWishCommand command) {
@@ -54,7 +57,7 @@ namespace Application.UseCases {
                 UserId = user.Id
             };
 
-            user.Wishlist.Add(wish);
+            _wishRepository.Add(wish);
 
             command.CreatedWishId = wish.Id;
             command.Success = true;

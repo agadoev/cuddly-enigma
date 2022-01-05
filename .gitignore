@@ -9,3 +9,10 @@ node_modules
 .config
 
 .vscode
+
+
+wish.db
+wish.db-shm
+wish.db-wal
+
+Migrations

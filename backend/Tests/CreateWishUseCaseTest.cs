@@ -12,6 +12,7 @@ namespace Tests {
         private ICommandHandler<CreateWishCommand> _handler;
 
         private Mock<IUserRepository> _userRepositoryMock;
+        private Mock<IWishesRepository> _wishRepositoryMock;
 
         private User _user;
 
@@ -27,19 +28,19 @@ namespace Tests {
 
             // Мок репозитория
             _userRepositoryMock = new Mock<IUserRepository>();
+            _wishRepositoryMock = new Mock<IWishesRepository>();
 
             // сказать, что репозиторий будет содержать одного пользователя с пустым вишлистом
             _userRepositoryMock
                 .Setup(r => r.Get(_userGuid))
                 .Returns(() => _user);
 
-            _handler = new CreateWishHandler(_userRepositoryMock.Object);
+            _handler = new CreateWishHandler(_userRepositoryMock.Object, _wishRepositoryMock.Object);
         }
 
         [Test]
         public void WishHasTitleAndUserExists_ShouldReturnSuccesEqualsTrueInOutput() {
             
-            // создать Input 
             var command = new CreateWishCommand() {
                 UserId = _userGuid,
                 WishTitle = "Подарочек",
@@ -53,7 +54,7 @@ namespace Tests {
             Assert.IsTrue(output.Success);
 
             // проверить, что был вызван метод Add в репозитории с заданым юзером в качестве параметра
-            _userRepositoryMock.Verify(r => r.Get(_userGuid));
+            _userRepositoryMock.Verify(r => r.Get(It.IsAny<Guid>()));
         }
 
 
@@ -85,6 +86,21 @@ namespace Tests {
             };
 
             Assert.That(() => _handler.Execute(input), Throws.InstanceOf<RowNotInTableException>());
+        }
+
+
+        [Test]
+        public void CommandCorrect_ShouldExecuteAddMethodOfWishRepository() {
+            var command = new CreateWishCommand() {
+                UserId = _userGuid,
+                WishTitle = "Подарочек",
+                WishUrl = "https://ozon.ru/..."
+            };
+
+            _handler.Execute(command);
+
+            _wishRepositoryMock
+                .Verify(r => r.Add(It.IsAny<Wish>()), Times.Once);
         }
     }
 }

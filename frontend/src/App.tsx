@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import './App.css';
 
 type WishViewModel = {
@@ -23,6 +24,31 @@ const WishCard= (props: WishCardProps) => {
 }
 
 function App() {
+
+  const uid: string = "_uid";
+
+  useEffect(() => {
+    if (!localStorage.getItem(uid)) {
+      // registerUser();
+
+    } else {
+      // loadUserWishes();
+   
+    }
+  }, [])
+  
+
+  const loadwishes = (_uid: string) => {
+     
+  };
+
+  const registerUser = () => {
+
+    // отправляем запрос на бек
+    // бек возвращает id пользваотеля
+    // мы его записываем в localstorage
+
+  };
 
   const wishes: WishViewModel[] = [
     {

@@ -29,6 +29,8 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
             };
             
             _context.Reservations.Add(entity);
+
+            _context.SaveChanges();
         }
 
         public Reservation Get(Guid id) {

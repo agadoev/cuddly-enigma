@@ -11,12 +11,9 @@ namespace Infrastructure.EntityFrameworkDataAccess {
 
         public DbSet<ReservationEntity> Reservations {get; set;}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) => options.UseSqlite("Data Source=wish.db");
-
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<UserEntity> ()
-                .ToTable ("Users")
-                .HasMany<WishEntity>();
+                .ToTable ("Users");
                 
             modelBuilder.Entity<WishEntity> ()
                 .ToTable("Wishes");

@@ -8,7 +8,6 @@ using Application.UseCases;
 using Application.Repositories;
 using Infrastructure.InMemoryDataAcces.Repositories;
 using Infrastructure.InMemoryDataAcces;
-using Application.UseCases.CreateWish;
 
 namespace Api
 {
@@ -29,7 +28,7 @@ namespace Api
             services.AddControllers();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddScoped<ICommandHandler<RegisterUserCommand>, RegisterUserHandler>();
-            services.AddScoped<IUseCase<CreateWishInput, CreateWishOutput>, CreateWishUseCase>();
+            services.AddScoped<ICommandHandler<CreateWishCommand>, CreateWishHandler>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddSingleton<InMemoryDbContext>(new InMemoryDbContext());
             services.AddSwaggerGen(c =>

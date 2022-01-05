@@ -4,13 +4,12 @@ using System;
 using NUnit.Framework;
 using Moq;
 using Application.UseCases;
-using Application.UseCases.CreateWish;
 using Application.Repositories;
 
 namespace Tests {
     public class CreateWishUseCaseTest {
 
-        private IUseCase<CreateWishInput, CreateWishOutput> _useCase;
+        private ICommandHandler<CreateWishCommand> _handler;
 
         private Mock<IUserRepository> _userRepositoryMock;
 
@@ -34,21 +33,21 @@ namespace Tests {
                 .Setup(r => r.Get(_userGuid))
                 .Returns(() => _user);
 
-            _useCase = new CreateWishUseCase(_userRepositoryMock.Object);
+            _handler = new CreateWishHandler(_userRepositoryMock.Object);
         }
 
         [Test]
         public void WishHasTitleAndUserExists_ShouldReturnSuccesEqualsTrueInOutput() {
             
             // создать Input 
-            var input = new CreateWishInput() {
+            var command = new CreateWishCommand() {
                 UserId = _userGuid,
                 WishTitle = "Подарочек",
                 WishUrl = "https://ozon.ru/..."
             };
 
             // добавить wish через useCase 
-            var output = _useCase.Execute(input);
+            var output = _handler.Execute(command);
 
             // проверить, что output.Success == true
             Assert.IsTrue(output.Success);
@@ -62,14 +61,14 @@ namespace Tests {
         public void InputWithoutTitle_ShouldThrowArgumentException() {
             // arrange
             // создать Input 
-            var input = new CreateWishInput() {
+            var command = new CreateWishCommand() {
                 UserId = _userGuid,
                 WishTitle = null,
                 WishUrl = "https://ozon.ru/..."
             };
 
             // act, assert
-            Assert.That(() => _useCase.Execute(input), Throws.ArgumentNullException);
+            Assert.That(() => _handler.Execute(command), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -79,13 +78,13 @@ namespace Tests {
                 .Setup((r) => r.Get(_userGuid))
                 .Returns(() => null);
 
-            var input = new CreateWishInput() {
+            var input = new CreateWishCommand() {
                 UserId = _userGuid,
                 WishTitle = "Подарочек",
                 WishUrl = "https://ozon.ru/..."
             };
 
-            Assert.That(() => _useCase.Execute(input), Throws.InstanceOf<RowNotInTableException>());
+            Assert.That(() => _handler.Execute(input), Throws.InstanceOf<RowNotInTableException>());
         }
     }
 }

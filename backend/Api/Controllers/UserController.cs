@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
-using Application.UseCases.CreateWish;
 using System.Net;
 
 namespace Api.Controllers {
@@ -13,16 +12,16 @@ namespace Api.Controllers {
 
         private readonly IConfiguration _configuration;
         private readonly ICommandHandler<RegisterUserCommand> _registerUserHandler;
-        private readonly IUseCase<CreateWishInput, CreateWishOutput> _createWishUseCase;
+        private readonly ICommandHandler<CreateWishCommand> _createWishHandler;
 
         public UserController(
             IConfiguration configuration,
             ICommandHandler<RegisterUserCommand> registerUserHandler,
-            IUseCase<CreateWishInput, CreateWishOutput> createWishUseCase
+            ICommandHandler<CreateWishCommand> createWishHandler
         ) { 
             _configuration = configuration;
             _registerUserHandler = registerUserHandler;
-            _createWishUseCase = createWishUseCase;
+            _createWishHandler = createWishHandler;
         }
 
         [HttpGet]
@@ -44,15 +43,15 @@ namespace Api.Controllers {
 
         [HttpPost]
         public IActionResult CreateWish([FromBody]CreateWishDto dto) {
-            var input = new CreateWishInput();
+            var command = new CreateWishCommand();
 
             // мапим DTO в Input
-            input.UserId = dto.UserId;
-            input.WishTitle = dto.WishDto.Title;
+            command.UserId = dto.UserId;
+            command.WishTitle = dto.WishDto.Title;
 
-            var output = _createWishUseCase.Execute(input);
+            _createWishHandler.Execute(command);
 
-            return output.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
+            return command.Success ? Ok() : StatusCode((int)HttpStatusCode.InternalServerError);
         }
     }
 }

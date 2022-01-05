@@ -1,7 +1,9 @@
 
 namespace Application.UseCases {
-    public interface ICommand {
-        bool Success {get; set;}
-        bool Done {get; set;}
+
+    public interface IUseCase<TInput, TOutput> {
+
+        TOutput Execute(TInput input);
+
     }
 }

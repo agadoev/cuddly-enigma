@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
@@ -9,6 +10,10 @@ namespace Api.Controllers {
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class WishesController : ControllerBase {
+
+
+        // TODO: Сделать нормальный класс базового контроллера, прикрутить к нему логгер
+
 
         private readonly ICommandHandler<GetWishesByUserCommand> _getWishesByUser;
         private readonly ICommandHandler<ReserveWishCommand> _reserveWish;
@@ -28,6 +33,10 @@ namespace Api.Controllers {
         }
 
 
+
+        /// <summary>
+        ///
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody]CreateWishDto dto) {
             try {
@@ -46,6 +55,10 @@ namespace Api.Controllers {
             }
         }
 
+        /// <summary>
+        /// 
+        ///     <returns>Список всех Wish конкретного пользователя</returns>
+        /// </summary>
         [HttpGet]
         public WishDto[] GetUserWishList([FromQuery]string userId) {
 
@@ -70,21 +83,27 @@ namespace Api.Controllers {
             return Ok();
         }
 
+
+        /// <summary>
+        ///     <returns>Обновленный список всех Wish</returns>
+        /// </summary>
         [HttpDelete]
-        public IActionResult Delete([FromQuery]string wishId, [FromQuery]string userId) {
-            try {
-                var command = new RemoveWishCommand();
+        public IEnumerable<WishDto> Delete([FromQuery]string wishId, [FromQuery]string userId) {
+            var command = new RemoveWishCommand();
 
-                command.WishId = new Guid(wishId);
-                command.UserId = new Guid(userId);
+            command.WishId = new Guid(wishId);
+            command.UserId = new Guid(userId);
 
-                _removeWish.Execute(command);
+            _removeWish.Execute(command);
 
-                return Ok();
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
+            var wishDtos = command.newWishes.Select((w) => new WishDto() {
+                WishId = w.Id,
+                UserId = w.UserId,
+                Title = w.Title,
+                Url = w.Url
+            });
+
+            return wishDtos;
         }
 
         [HttpPost]

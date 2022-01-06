@@ -30,6 +30,10 @@ namespace Api.Controllers {
 
         }
 
+
+        /// <summary>
+        ///     Возвращает id зарегистрированного пользователя 
+        /// </summary>
         [HttpPost]
         public JsonResult Register([FromBody]UserDto dto) {
 

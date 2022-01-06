@@ -1,6 +1,8 @@
 using System;
 using System.Data;
+using System.Collections.Generic;
 using Application.Repositories;
+using Domain;
 
 namespace Application.UseCases {
 
@@ -12,6 +14,8 @@ namespace Application.UseCases {
         public Guid WishId {get; set;}
 
         public Guid UserId {get; set;}
+
+        public IEnumerable<Wish> newWishes {get; set;}
 
         public RemoveWishCommand() {
             Success = false;
@@ -31,6 +35,12 @@ namespace Application.UseCases {
             _wishesRepository = wishesRepository;
         }
 
+
+        /// <summary>
+        ///     получает информацию о пользователе, который сделал запрос
+        ///     Удаляет Wish по его ID
+        ///     Получает обновленный список Wish'ей 
+        /// </summary>
         public void Execute(RemoveWishCommand command) {
 
             var wish = _wishesRepository.Get(command.WishId);
@@ -43,6 +53,7 @@ namespace Application.UseCases {
 
             _wishesRepository.Remove(command.WishId);
 
+            command.newWishes = _wishesRepository.GetByUser(command.UserId);
             command.Success = true;
             command.Done = true;
         }

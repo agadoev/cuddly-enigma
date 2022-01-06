@@ -2,6 +2,6 @@
 namespace Application.UseCases {
 
     public interface ICommandHandler<ICommand> {
-        ICommand Execute(ICommand command);
+        void Execute(ICommand command);
     }
 }

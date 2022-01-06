@@ -23,7 +23,7 @@ namespace Application.UseCases {
             _wishesRepository = wishesRepository;
         }
 
-        public GetWishesByUserCommand Execute(GetWishesByUserCommand command) {
+        public void Execute(GetWishesByUserCommand command) {
 
             if (command.UserId is null)
                 throw new ArgumentNullException();
@@ -32,7 +32,6 @@ namespace Application.UseCases {
             command.Success = true;
             command.Done = true;
 
-            return command;
         }
     }
 }

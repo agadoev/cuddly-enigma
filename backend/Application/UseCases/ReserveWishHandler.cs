@@ -36,7 +36,7 @@ namespace Application.UseCases {
             _wishesRepository = wishesRepository;
         }
 
-        public ReserveWishCommand Execute(ReserveWishCommand command) {
+        public void Execute(ReserveWishCommand command) {
 
             var reserver = _userRepository.Get(command.ReserverId);
 
@@ -50,8 +50,6 @@ namespace Application.UseCases {
             var reservation = new Reservation(reserver, wish);
 
             _reservationRepository.Add(reservation);
-
-            return new ReserveWishCommand();
         }
     }
 }

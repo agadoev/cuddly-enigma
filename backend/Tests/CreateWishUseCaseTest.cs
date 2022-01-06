@@ -48,10 +48,10 @@ namespace Tests {
             };
 
             // добавить wish через useCase 
-            var output = _handler.Execute(command);
+            _handler.Execute(command);
 
             // проверить, что output.Success == true
-            Assert.IsTrue(output.Success);
+            Assert.IsTrue(command.Success);
 
             // проверить, что был вызван метод Add в репозитории с заданым юзером в качестве параметра
             _userRepositoryMock.Verify(r => r.Get(It.IsAny<Guid>()));

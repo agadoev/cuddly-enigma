@@ -95,7 +95,7 @@ namespace Api.Controllers {
             command.ReserverId = dto.ReservedId;
             command.WishId = dto.WishId;    
 
-            command = _reserveWish.Execute(command);
+            _reserveWish.Execute(command);
             return Ok();
         }
 

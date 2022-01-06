@@ -25,7 +25,7 @@ namespace Application.UseCases {
             _repository = userRepository;
         }
 
-        public RegisterUserCommand Execute(RegisterUserCommand command) {
+        public void Execute(RegisterUserCommand command) {
             
             // все проверки потом можно вынести в отдельный validation класс
             if (string.IsNullOrEmpty(command.Username))
@@ -42,8 +42,6 @@ namespace Application.UseCases {
             command.Id = user.Id;
             command.Success = true;
             command.Done = true;
-
-            return command;
         }
     }
 }

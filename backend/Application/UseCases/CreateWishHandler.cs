@@ -41,7 +41,7 @@ namespace Application.UseCases {
             _wishRepository = wishesRepository;
         }        
 
-        public CreateWishCommand Execute(CreateWishCommand command) {
+        public void Execute(CreateWishCommand command) {
 
             if (string.IsNullOrEmpty(command.WishTitle))
                 throw new ArgumentNullException("У объекта Wish должно быть заполенно property Title");
@@ -62,8 +62,6 @@ namespace Application.UseCases {
             command.CreatedWishId = wish.Id;
             command.Success = true;
             command.Done = true;
-
-            return command;
         }
     }
 }

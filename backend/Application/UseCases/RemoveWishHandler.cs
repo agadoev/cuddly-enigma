@@ -31,7 +31,7 @@ namespace Application.UseCases {
             _wishesRepository = wishesRepository;
         }
 
-        public RemoveWishCommand Execute(RemoveWishCommand command) {
+        public void Execute(RemoveWishCommand command) {
 
             var wish = _wishesRepository.Get(command.WishId);
 
@@ -45,8 +45,6 @@ namespace Application.UseCases {
 
             command.Success = true;
             command.Done = true;
-
-            return command;
         }
     }
 }

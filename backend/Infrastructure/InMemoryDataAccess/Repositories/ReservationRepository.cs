@@ -16,12 +16,10 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
             _context = context;
         }
 
-        public void Add(Reservation reservarion) {
-            _context.Reservations.Add(reservarion);
-        }
+        public void Add(Reservation reservarion) => _context.Reservations.Add(reservarion);
 
-        public Reservation Get(Guid id) {
-            return _context.Reservations.First(x => x.Id == id);
-        }
+        public Reservation Get(Guid id) => _context.Reservations.First(x => x.Id == id);
+
+        public Reservation GetByWishId(Guid wishId) => _context.Reservations.First(x => x.Wish.Id == wishId);
     }
 }

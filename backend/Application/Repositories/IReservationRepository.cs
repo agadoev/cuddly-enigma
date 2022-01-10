@@ -8,5 +8,7 @@ namespace Application.Repositories {
 
         Reservation Get(Guid id);
 
+        Reservation GetByWishId(Guid wishId);
+
     }
 }

@@ -38,18 +38,18 @@ namespace Application.UseCases {
 
         public void Execute(ReserveWishCommand command) {
 
-            var reserver = _userRepository.Get(command.ReserverId);
-
-            var wish = _wishesRepository.Get(command.WishId);
-
-            if (wish.Reserved)
+            if (_reservationRepository.GetByWishId(command.WishId) is not null)
                 throw new ArgumentException("Wish is already reserved");
 
-            wish.Reserved = true;
-
+            var reserver = _userRepository.Get(command.ReserverId);
+            var wish = _wishesRepository.Get(command.WishId);
             var reservation = new Reservation(reserver, wish);
 
+
             _reservationRepository.Add(reservation);
+
+
+            wish.Reserved = true;
         }
     }
 }

@@ -5,21 +5,63 @@ using NUnit.Framework;
 using Application.UseCases;
 using Application.Repositories;
 using Moq;
+using Tests.Builders;
 
 namespace Tests.UnitTests {
+
+    public class ObjectMother {
+        public Guid GetGuid1() => new Guid("1a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+        public Guid GetGuid2() => new Guid("2a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+        public Guid GetGuid3() => new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+        public Guid GetGuid4() => new Guid("4a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+        
+        public Wish GetWishWishTitleAndGuid() {
+            var wish = new Wish {
+                Id = GetGuid3(),
+                Title = "Wish1",
+                Url = "http:/ozon.ru/...",
+                Reserved = false
+            };
+
+            return wish;
+        }
+
+        public Wish GetAlreadyReservedWish() {
+
+            var wish = new Wish {
+                Id = GetGuid3(),
+                Title = "Wish1",
+                Url = "http:/ozon.ru/...",
+                Reserved = true
+            };
+
+            return wish;
+        }
+    }
+
+
     public class ReserveWishHandlerTest {
 
         private ICommandHandler<ReserveWishCommand> _handler {get; set;}
-
         private Mock<IUserRepository> _userRepositoryMock {get; set;}
         private Mock<IWishesRepository> _wishesRepositoryMock {get; set;}
         private Mock<IReservationRepository> _reservationRepositoryMock {get; set;}
+
+        private readonly ObjectMother _mother = new ObjectMother();
+        private readonly ReserveWishCommandBuilder _commandBuilder = new ReserveWishCommandBuilder();
+        private readonly WishBuilder _wishBuilder = new WishBuilder();
+        private readonly UserBuilder _userBuilder = new UserBuilder();
+        private readonly ReservationBuilder _reservationBuilder = new ReservationBuilder();
 
         [SetUp]
         public void SetUp() {
             _userRepositoryMock = new Mock<IUserRepository>();
             _wishesRepositoryMock = new Mock<IWishesRepository>();
             _reservationRepositoryMock = new Mock<IReservationRepository>();
+
+            _wishesRepositoryMock
+                .Setup(r => r.Get(It.IsAny<Guid>()))
+                .Returns(It.IsAny<Wish>());
 
             _handler = new ReserveWishHandler(
                 _reservationRepositoryMock.Object,
@@ -31,34 +73,31 @@ namespace Tests.UnitTests {
         [Test]
         public void ShoulCallAddMethodOfReservationRepository() {
 
-            var command = new ReserveWishCommand();
-            
-            var reserverGuid = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
-            var wishGuid = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-
-            var wish = new Wish {
-                Id = wishGuid,
-                Title = "",
-                Url = "",
-                Reserved = false
-            };
-
-            var reserver = new User {
-                Id = reserverGuid,
-                Name = "Alex",
-                Wishlist = new List<Wish>() { wish }
-            };
+            var reserverGuid = _mother.GetGuid1();
+            var wishGuid = _mother.GetGuid2();
 
             _userRepositoryMock
                 .Setup((r) => r.Get(reserverGuid))
-                .Returns(reserver);
+                .Returns(_userBuilder
+                    .WithId(reserverGuid)
+                    .WithName("Alex")
+                    .WithList(new List<Wish>())
+                    .Build());
 
             _wishesRepositoryMock
                 .Setup((r) => r.Get(wishGuid))
-                .Returns(wish);
+                .Returns(_wishBuilder
+                    .WithId(wishGuid)
+                    .WithReserved(false)
+                    .WithTitle("Wish")
+                    .WithUrl("http://...")
+                    .WithUserId(reserverGuid)
+                    .Build());
 
-            command.ReserverId = reserverGuid;
-            command.WishId = wishGuid;
+            var command = _commandBuilder
+                .WithReserverId(reserverGuid)
+                .WithWishId(wishGuid)
+                .Build();
 
             _handler.Execute(command);
 
@@ -69,43 +108,16 @@ namespace Tests.UnitTests {
 
         [Test]
         public void WishAlreadyReserved_ShouldThrowArgumentException() {
-
-            var command = new ReserveWishCommand();
-            
-            var reserverGuid = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
-            var wishGuid = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var reservationId = new Guid("44f5d53b-c697-4d97-aa4c-4f4ee98620a4");
-
-            var wish = new Wish {
-                Id = wishGuid,
-                Title = "",
-                Url = "",
-                Reserved = true // важно, что здесь reserved = true
-            };
-
-            var reserver = new User {
-                Id = reserverGuid,
-                Name = "Alex",
-                Wishlist = new List<Wish>() { wish }
-            };
-
-            var reservation = new Reservation(reserver, wish);
-            reservation.Id = reservationId;
-
-            _userRepositoryMock
-                .Setup((r) => r.Get(reserverGuid))
-                .Returns(reserver);
-
-            _wishesRepositoryMock
-                .Setup((r) => r.Get(wishGuid))
-                .Returns(wish);
+            var command = _commandBuilder
+                .WithDone(false)
+                .WithSuccess(false)
+                .WithReserverId(It.IsAny<Guid>())
+                .WithWishId(It.IsAny<Guid>())
+                .Build();
 
             _reservationRepositoryMock
-                .Setup((r) => r.Get(reservationId))
-                .Returns(reservation);
-
-            command.ReserverId = reserverGuid;
-            command.WishId = wishGuid;
+                .Setup((r) => r.GetByWishId(It.IsAny<Guid>()))
+                .Returns<Reservation>(x => x);
 
             Assert.That(() => _handler.Execute(command), Throws.InstanceOf<ArgumentException>());
         }

@@ -33,6 +33,8 @@ namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
             _context.SaveChanges();
         }
 
+        public Reservation GetByWishId(Guid wishId) => throw new NotImplementedException();
+
         public Reservation Get(Guid id) {
             var entity = _context.Reservations.Find(id);
 

@@ -5,10 +5,8 @@ using Application.UseCases;
 using Application.Repositories;
 using Moq;
 
-namespace Tests {
+namespace Tests.UnitTests {
     public class RegisterUserHandlerTests {
-
-
         private ICommandHandler<RegisterUserCommand> _handler;
         private Mock<IUserRepository> _userRepository;
 

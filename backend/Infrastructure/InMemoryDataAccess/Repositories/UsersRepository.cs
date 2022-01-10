@@ -16,11 +16,11 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
         }
 
         public void Add(User user) {
-            (_context.Users as List<User>).Add(user);
+            _context.Users.Add(user);
         }
 
         public User Get(Guid id) {
-            return (_context.Users as List<User>).Find(x => x.Id == id);
+            return (_context.Users as HashSet<User>).First(x => x.Id == id);
         }
     }
 }

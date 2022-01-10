@@ -6,7 +6,7 @@ using Application.UseCases;
 using Application.Repositories;
 using Moq;
 
-namespace Tests {
+namespace Tests.UnitTests {
     public class ReserveWishHandlerTest {
 
         private ICommandHandler<ReserveWishCommand> _handler {get; set;}

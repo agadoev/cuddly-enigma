@@ -6,7 +6,7 @@ using Moq;
 using Application.UseCases;
 using Application.Repositories;
 
-namespace Tests {
+namespace Tests.UnitTests {
     public class RemoveWishHandlerTest {
 
         private Mock<IWishesRepository> _wishesRepository;

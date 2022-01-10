@@ -6,6 +6,11 @@ using Moq;
 using Application.UseCases;
 using Application.Repositories;
 
+/**
+    Лондонский подход
+    Использование ObjectMother
+*/
+
 namespace Tests.UnitTests {
 
 

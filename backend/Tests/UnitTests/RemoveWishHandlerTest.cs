@@ -5,111 +5,127 @@ using NUnit.Framework;
 using Moq;
 using Application.UseCases;
 using Application.Repositories;
+using Infrastructure.InMemoryDataAcces;
+using Infrastructure.InMemoryDataAcces.Repositories;
+using Tests.Builders;
 
 namespace Tests.UnitTests {
     public class RemoveWishHandlerTest {
 
-        private Mock<IWishesRepository> _wishesRepository;
-        private Mock<IUserRepository> _usersRepository;
-        private ICommandHandler<RemoveWishCommand> _handler;
+        private readonly WishBuilder _wishBuilder = new WishBuilder();
 
 
-        [SetUp]
-        public void SetUp() {
-            _wishesRepository = new Mock<IWishesRepository>();
-            _usersRepository = new Mock<IUserRepository>();
-
-            _handler = new RemoveWishHandler(_usersRepository.Object, _wishesRepository.Object);
-        }
-
-
+        // удалять может только тот пользователь, который создавал Wish
+        // Поэтому если Id пользователя, который удаляет и Id пользователя в Wish
+        // не совпадают, надо выкидывать Exception (На самом деле правильнее настроить авторизацию, но я не умею..) 
         [Test]
         public void UserIdDoesNotMatch_ShouldThrowException() {
 
             // arrange
-            var user1Id = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var user2Id = new Guid("2c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var wishId = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+            var context = new InMemoryDbContext();
+            var userRepository = new UserRepository(context);
+            var wishesRepository = new WishRepository(context);
+            var handler = new RemoveWishHandler(userRepository, wishesRepository);
+
+            var user1Id = Guid.NewGuid();
+            var user2Id = Guid.NewGuid();
+            var wishId = Guid.NewGuid();
+
+            var wish = _wishBuilder
+                .WithId(wishId) 
+                .WithUserId(user1Id) // у wish userId  
+                .WithTitle(string.Empty)
+                .WithUrl(string.Empty)
+                .WithReserved(false)
+                .Build();
+
+            wishesRepository.Add(wish);
 
             var command = new RemoveWishCommand() {
-                UserId = user1Id,
+                UserId = user2Id,
                 WishId = wishId
             };
-
-            var wishStub = new Wish() {
-                Id = wishId,
-                UserId = user2Id 
-            };
-
-            _wishesRepository
-                .Setup(r => r.Get(wishId))
-                .Returns(wishStub);
-            
-            Assert.That(() => _handler.Execute(command), Throws.InstanceOf<UnauthorizedAccessException>());
-        }
-
-        [Test]
-        public void CommandCorrect_ShouldCallGetMethodOfWishesRepository() {
-
-            // arrange
-            var userId = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var wishId = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
-
-            var command = new RemoveWishCommand() {
-                UserId = userId,
-                WishId = wishId
-            };
-
-            _wishesRepository
-                .Setup(r => r.Get(wishId))
-                .Returns(new Wish { UserId = userId, Id = wishId });
-
-            // act
-            _handler.Execute(command);
 
             // assert
-            _wishesRepository.Verify(r => r.Get(It.IsAny<Guid>()));
+            Assert.That(() => handler.Execute(command), Throws.InstanceOf<UnauthorizedAccessException>());
         }
 
+        // Проверяем, что объект действительно удаляется
         [Test]
         public void CommandCorrect_ShouldCallRemoveMethodOfWishesRepository() {
 
             // arrange
-            var userId = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var wishId = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+            var context = new InMemoryDbContext();
+            var userRepository = new UserRepository(context);
+            var wishesRepository = new WishRepository(context);
+            var handler = new RemoveWishHandler(userRepository, wishesRepository);
+
+            var userId = Guid.NewGuid();
+            var wish1Id = Guid.NewGuid();
+            var wish2Id = Guid.NewGuid();
+
+            var wish1 = _wishBuilder
+                .WithId(wish1Id)
+                .WithTitle(string.Empty)
+                .WithUserId(userId)
+                .WithUrl(string.Empty)
+                .WithReserved(false)
+                .Build();
+            
+            var wish2 = _wishBuilder
+                .WithId(wish2Id)
+                .WithTitle(string.Empty)
+                .WithUserId(userId)
+                .WithUrl(string.Empty)
+                .WithReserved(false)
+                .Build();
 
             var command = new RemoveWishCommand() {
                 UserId = userId,
-                WishId = wishId
+                WishId = wish1Id // будем удалять wish1
             };
 
-            _wishesRepository
-                .Setup(r => r.Get(wishId))
-                .Returns(new Wish { UserId = userId, Id = wishId });
+            wishesRepository.Add(wish1);
+            wishesRepository.Add(wish2);
 
-            _handler.Execute(command);
+            // act
+            handler.Execute(command);
 
-            _wishesRepository.Verify(r => r.Get(It.IsAny<Guid>()));
+            // assert
+            Assert.That(wishesRepository.Get(wish1Id), Is.Null);
         }
 
+
+        // В случае, если не найдено, должны выкинуть Exception
         [Test]
         public void WishNotFound_ShouldThrowObjectNotFoundException() {
             
             // arrange
-            var userId = new Guid("1c34f960-10eb-40d7-a945-fd3f39e1ccfb");
-            var wishId = new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
+            var context = new InMemoryDbContext();
+            var userRepository = new UserRepository(context);
+            var wishesRepository = new WishRepository(context);
+            var handler = new RemoveWishHandler(userRepository, wishesRepository);
+
+            var userId = Guid.NewGuid();
+            var wish1Id = Guid.NewGuid();
+            var wish2Id = Guid.NewGuid();
+
+            var wish1 = _wishBuilder
+                .WithId(wish1Id)
+                .WithTitle(string.Empty)
+                .WithUserId(userId)
+                .WithUrl(string.Empty)
+                .WithReserved(false)
+                .Build();
+
+             wishesRepository.Add(wish1);
 
             var command = new RemoveWishCommand() {
                 UserId = userId,
-                WishId = wishId
+                WishId = wish2Id 
             };
 
-            _wishesRepository
-                .Setup(r => r.Get(wishId))
-                .Returns((Wish)null);
-
-            Assert.That(() => _handler.Execute(command), Throws.InstanceOf<RowNotInTableException>());
-            _wishesRepository.Verify(r => r.Get(It.IsAny<Guid>()));
+            Assert.That(() => handler.Execute(command), Throws.InstanceOf<RowNotInTableException>());
         }
     }
 }

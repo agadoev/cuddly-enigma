@@ -25,7 +25,12 @@ namespace Infrastructure.InMemoryDataAcces.Repositories {
         }
 
         public Wish Get(Guid id) {
-            return _context.Wishes.First(x => x.Id == id);
+            try {
+                var wish = _context.Wishes.First(x => x.Id == id);
+                return wish;
+            } catch(Exception ex) {
+                return null;
+            }
         }
     }
 }

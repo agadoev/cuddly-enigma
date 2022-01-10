@@ -7,6 +7,10 @@ using Application.Repositories;
 using Moq;
 using Tests.Builders;
 
+/** 
+    Использование DataBuilder
+*/
+
 namespace Tests.UnitTests {
 
     public class ObjectMother {
@@ -14,29 +18,6 @@ namespace Tests.UnitTests {
         public Guid GetGuid2() => new Guid("2a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
         public Guid GetGuid3() => new Guid("3a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
         public Guid GetGuid4() => new Guid("4a3b9b40-58d5-4b25-8e30-3c78a8359c4f");
-        
-        public Wish GetWishWishTitleAndGuid() {
-            var wish = new Wish {
-                Id = GetGuid3(),
-                Title = "Wish1",
-                Url = "http:/ozon.ru/...",
-                Reserved = false
-            };
-
-            return wish;
-        }
-
-        public Wish GetAlreadyReservedWish() {
-
-            var wish = new Wish {
-                Id = GetGuid3(),
-                Title = "Wish1",
-                Url = "http:/ozon.ru/...",
-                Reserved = true
-            };
-
-            return wish;
-        }
     }
 
 

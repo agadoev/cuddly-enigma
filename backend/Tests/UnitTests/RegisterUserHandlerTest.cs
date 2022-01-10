@@ -5,6 +5,10 @@ using Application.UseCases;
 using Application.Repositories;
 using Moq;
 
+/**
+    Лондонский подход
+*/
+
 namespace Tests.UnitTests {
     public class RegisterUserHandlerTests {
         private ICommandHandler<RegisterUserCommand> _handler;

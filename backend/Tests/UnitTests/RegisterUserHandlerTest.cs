@@ -47,8 +47,13 @@ namespace Tests.UnitTests {
                 Username = null,
                 Id = null
             };
+ 
+            // act
+            Action execute = () => _handler.Execute(command);
 
-            Assert.That(() => _handler.Execute(command), Throws.InstanceOf<ArgumentNullException>());
+
+            // assert
+            Assert.That(execute, Throws.InstanceOf<ArgumentNullException>());
         }
 
         [Test]

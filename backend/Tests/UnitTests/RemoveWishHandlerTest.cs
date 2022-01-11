@@ -46,8 +46,11 @@ namespace Tests.UnitTests {
                 WishId = wishId
             };
 
+            // act
+            Action execute = () => handler.Execute(command);
+
             // assert
-            Assert.That(() => handler.Execute(command), Throws.InstanceOf<UnauthorizedAccessException>());
+            Assert.That(execute, Throws.InstanceOf<UnauthorizedAccessException>());
         }
 
         // Проверяем, что объект действительно удаляется
@@ -125,7 +128,9 @@ namespace Tests.UnitTests {
                 WishId = wish2Id 
             };
 
-            Assert.That(() => handler.Execute(command), Throws.InstanceOf<RowNotInTableException>());
+            Action execute = () => handler.Execute(command);
+
+            Assert.That(execute, Throws.InstanceOf<RowNotInTableException>());
         }
     }
 }

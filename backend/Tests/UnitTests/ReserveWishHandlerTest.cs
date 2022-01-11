@@ -89,6 +89,7 @@ namespace Tests.UnitTests {
 
         [Test]
         public void WishAlreadyReserved_ShouldThrowArgumentException() {
+            // arrange
             var command = _commandBuilder
                 .WithDone(false)
                 .WithSuccess(false)
@@ -100,6 +101,10 @@ namespace Tests.UnitTests {
                 .Setup((r) => r.GetByWishId(It.IsAny<Guid>()))
                 .Returns<Reservation>(x => x);
 
+            // act
+            Action act = () => _handler.Execute(command);
+
+            // assert    
             Assert.That(() => _handler.Execute(command), Throws.InstanceOf<ArgumentException>());
         }
     }

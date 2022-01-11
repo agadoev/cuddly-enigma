@@ -96,29 +96,43 @@ namespace Tests.UnitTests {
             // создать Input 
             var command = _mother.GetCommandWithoutTitle(_user.Id);
 
-            // act, assert
-            Assert.That(() => _handler.Execute(command), Throws.ArgumentNullException);
+            // act
+            Action execute = () => _handler.Execute(command);
+
+            // assert
+            Assert.That(execute, Throws.ArgumentNullException);
         }
 
         [Test]
         public void UserDoesNotExists_ShouldThrowNotFoundException() {
 
+            // arrange
             _userRepositoryMock
                 .Setup((r) => r.Get(It.IsAny<Guid>()))
                 .Returns(() => null);
 
             var command = _mother.GetCorrectCommand(_userGuid);
 
+            // act
+            Action execute = () => _handler.Execute(command);
+
+
+            // assert
             Assert.That(() => _handler.Execute(command), Throws.InstanceOf<RowNotInTableException>());
         }
 
 
         [Test]
         public void CommandCorrect_ShouldExecuteAddMethodOfWishRepository() {
+            // arrange
             var command = _mother.GetCorrectCommand(_user.Id);
 
+
+            // act
             _handler.Execute(command);
 
+
+            // assert
             _wishRepositoryMock
                 .Verify(r => r.Add(It.IsAny<Wish>()), Times.Once);
         }

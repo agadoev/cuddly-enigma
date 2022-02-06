@@ -6,10 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Application.UseCases;
 using Application.Repositories;
-using Infrastructure.InMemoryDataAcces.Repositories;
 using Infrastructure.InMemoryDataAcces;
 using Infrastructure.EntityFrameworkDataAccess;
-using Infrastructure.EntityFrameworkDataAccess.Repositories;
 
 namespace Api
 {

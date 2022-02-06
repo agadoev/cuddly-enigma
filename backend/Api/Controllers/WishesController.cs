@@ -14,7 +14,6 @@ namespace Api.Controllers {
 
         // TODO: Сделать нормальный класс базового контроллера, прикрутить к нему логгер
 
-
         private readonly ICommandHandler<GetWishesByUserCommand> _getWishesByUser;
         private readonly ICommandHandler<ReserveWishCommand> _reserveWish;
         private readonly ICommandHandler<CreateWishCommand> _createWish;
@@ -56,7 +55,6 @@ namespace Api.Controllers {
         }
 
         /// <summary>
-        /// 
         ///     <returns>Список всех Wish конкретного пользователя</returns>
         /// </summary>
         [HttpGet]

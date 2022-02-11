@@ -59,12 +59,15 @@ namespace Api
                         .AllowAnyMethod()
                         .AllowAnyHeader()
             );
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1");
+			});
             
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
             }
 
             app.UseRouting();
@@ -72,7 +75,7 @@ namespace Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapSwagger();
+                // endpoints.MapSwagger();
             });
         }
     }

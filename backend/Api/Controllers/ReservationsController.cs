@@ -5,8 +5,7 @@ using Application.UseCases;
 namespace Api.Controllers {
 
     [ApiController]
-    [Route("[controller]/[action]")]
-    class ReservationController : ControllerBase {
+    public class ReservationController : ControllerBase {
 
         private readonly ICommandHandler<ReserveWishCommand> _reserveWish;
 
@@ -16,7 +15,7 @@ namespace Api.Controllers {
             _reserveWish = reserveWishHandler; 
         }
 
-        [HttpPost]
+        [HttpPost("/reservations/")]
         public IActionResult Add([FromBody] ReserveWishDto dto) {
             var command = new ReserveWishCommand();
 
@@ -27,8 +26,8 @@ namespace Api.Controllers {
             return Ok();
         }
 
-        [HttpDelete]
-        public IActionResult Delete([FromQuery]string reservationId) {
+        [HttpDelete("/reservations/{id}")]
+        public IActionResult Delete([FromQuery]string id) {
 
             return Ok();    
         }

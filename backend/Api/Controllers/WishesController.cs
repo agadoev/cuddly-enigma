@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Api.Dtos;
 using Application.UseCases;
+using Api.Mappers;
+using Domain;
 
 namespace Api.Controllers {
 
     [ApiController]
-    [Route("[controller]/[action]")]
     public class WishesController : ControllerBase {
-
-
-        // TODO: Сделать нормальный класс базового контроллера, прикрутить к нему логгер
 
         private readonly ICommandHandler<GetWishesByUserCommand> _getWishesByUser;
         private readonly ICommandHandler<CreateWishCommand> _createWish;
         private readonly ICommandHandler<RemoveWishCommand> _removeWish;
+        private IMapperBase<Wish, WishDto> _mapper;
+
 
         public WishesController(
             ICommandHandler<CreateWishCommand> createWishHandler,
@@ -26,14 +26,10 @@ namespace Api.Controllers {
             _createWish = createWishHandler;
             _removeWish = removeWishHandler;
             _getWishesByUser = getWishesByUser;
+            _mapper = new WishMapper();
         }
 
-
-
-        /// <summary>
-        ///
-        /// </summary>
-        [HttpPost]
+        [HttpPost("/wishes/")]
         public IActionResult Create([FromBody]CreateWishDto dto) {
             try {
                 var command = new CreateWishCommand();
@@ -44,7 +40,6 @@ namespace Api.Controllers {
             
                 _createWish.Execute(command);
 
-                // TODO: возвращать созданный объект
                 return Ok();
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -52,10 +47,7 @@ namespace Api.Controllers {
             }
         }
 
-        /// <summary>
-        ///     <returns>Список всех Wish конкретного пользователя</returns>
-        /// </summary>
-        [HttpGet]
+        [HttpGet("/wishes/{userId}")]
         public WishDto[] GetUserWishList([FromQuery]string userId) {
 
             try {
@@ -74,16 +66,12 @@ namespace Api.Controllers {
             }
         }
 
-        [HttpPut]
+        [HttpPut("/wishes/{wishId}")]
         public IActionResult Update([FromQuery]string wishId) {
             return Ok();
         }
 
-
-        /// <summary>
-        ///     <returns>Обновленный список всех Wish</returns>
-        /// </summary>
-        [HttpDelete]
+        [HttpDelete("/wishes/{wishId}/{userId}")]
         public IEnumerable<WishDto> Delete([FromQuery]string wishId, [FromQuery]string userId) {
             var command = new RemoveWishCommand();
 
@@ -92,19 +80,7 @@ namespace Api.Controllers {
 
             _removeWish.Execute(command);
 
-            var wishDtos = command.newWishes.Select((w) => new WishDto() {
-                WishId = w.Id,
-                UserId = w.UserId,
-                Title = w.Title,
-                Url = w.Url
-            });
-
-            return wishDtos;
-        }
-
-        [HttpPost]
-        public IActionResult DiscardReservation([FromBody]DiscardReservationDto dto) {
-            return Ok();
+            return command.newWishes.Select((w) => _mapper.Map(w));
         }
     }
 }

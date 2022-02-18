@@ -4,53 +4,39 @@ using Application.Repositories;
 using Domain;
 using System.Collections.Generic;
 using Infrastructure.Entities;
+using Infrastructure.EntityFrameworkDataAccess.Mappers;
 
 namespace Infrastructure.EntityFrameworkDataAccess.Repositories {
     public class WishesRepository : IWishesRepository {
 
         private EFDbContext _context;
 
+        private IMapper<Wish, WishEntity> _mapper;
+
         public WishesRepository(EFDbContext context) {
             _context = context;
+            _mapper = new WishMapper();
         }
 
         public void Add(Wish wish) {
-            var wishEntity = new WishEntity {
-                Id = wish.Id,
-                Title = wish.Title,
-                Url = wish.Url,
-                UserId = wish.UserId,
-            };
+            var entity = _mapper.Map(wish);
 
-            _context.Wishes.Add(wishEntity);
+            _context.Wishes.Add(entity);
 
             _context.SaveChanges();
-
         }
 
         public Wish Get(Guid id) {
             var wishEntity = _context.Wishes.Find(id);
 
-            var wish = new Wish() {
-                Id = wishEntity.Id,
-                Title = wishEntity.Title,
-                Url = wishEntity.Url,
-                UserId = wishEntity.UserId
-            };
-
-            return wish;
+            return _mapper.Map(wishEntity);
         }
 
         public IEnumerable<Wish> GetByUser(Guid userId) {
             
             var wishEntities = _context.Wishes.Where(w => w.UserId == userId).AsEnumerable().ToList();
 
-            var wishes = wishEntities.Select(w => new Wish() {
-                Id = w.Id,
-                Title = w.Title,
-                Url = w.Url,
-                UserId = w.UserId                
-            });
+            var wishes = wishEntities.Select(w => _mapper.Map(w));
 
             return wishes;
         }

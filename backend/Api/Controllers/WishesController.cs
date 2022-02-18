@@ -17,7 +17,6 @@ namespace Api.Controllers {
         private readonly ICommandHandler<RemoveWishCommand> _removeWish;
         private IMapperBase<Wish, WishDto> _mapper;
 
-
         public WishesController(
             ICommandHandler<CreateWishCommand> createWishHandler,
             ICommandHandler<RemoveWishCommand> removeWishHandler,

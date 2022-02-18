@@ -8,7 +8,7 @@ using System.Net;
 namespace Api.Controllers {
             
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class UserController : ControllerBase {
 
         private readonly IConfiguration _configuration;

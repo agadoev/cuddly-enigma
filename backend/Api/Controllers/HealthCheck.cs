@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api {
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class HealthCheckController : ControllerBase {
 
         [HttpGet]
-        public IActionResult Check() {
+        [Route("/healthcheck/")]
+        public IActionResult Index() {
             return StatusCode(200);
         }
     }

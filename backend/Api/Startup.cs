@@ -64,6 +64,9 @@ namespace Api
             app.UseSwaggerUI(c => {
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1");
 			});
+
+            app.UseAuthentication();
+            app.UseAuthorization();
             
             if (env.IsDevelopment())
             {
@@ -75,7 +78,6 @@ namespace Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                // endpoints.MapSwagger();
             });
         }
     }

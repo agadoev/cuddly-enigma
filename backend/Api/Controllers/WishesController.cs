@@ -8,24 +8,21 @@ using Application.UseCases;
 namespace Api.Controllers {
 
     [ApiController]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     public class WishesController : ControllerBase {
 
 
         // TODO: Сделать нормальный класс базового контроллера, прикрутить к нему логгер
 
         private readonly ICommandHandler<GetWishesByUserCommand> _getWishesByUser;
-        private readonly ICommandHandler<ReserveWishCommand> _reserveWish;
         private readonly ICommandHandler<CreateWishCommand> _createWish;
         private readonly ICommandHandler<RemoveWishCommand> _removeWish;
 
         public WishesController(
-            ICommandHandler<ReserveWishCommand> reserveWishHandler,
             ICommandHandler<CreateWishCommand> createWishHandler,
             ICommandHandler<RemoveWishCommand> removeWishHandler,
             ICommandHandler<GetWishesByUserCommand> getWishesByUser
         ) {
-            _reserveWish = reserveWishHandler;
             _createWish = createWishHandler;
             _removeWish = removeWishHandler;
             _getWishesByUser = getWishesByUser;
@@ -47,6 +44,7 @@ namespace Api.Controllers {
             
                 _createWish.Execute(command);
 
+                // TODO: возвращать созданный объект
                 return Ok();
             } catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -102,18 +100,6 @@ namespace Api.Controllers {
             });
 
             return wishDtos;
-        }
-
-        [HttpPost]
-        public IActionResult Reserve([FromBody]ReserveWishDto dto) {
-
-            var command = new ReserveWishCommand();
-
-            command.ReserverId = dto.ReservedId;
-            command.WishId = dto.WishId;    
-
-            _reserveWish.Execute(command);
-            return Ok();
         }
 
         [HttpPost]

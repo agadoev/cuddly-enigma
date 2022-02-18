@@ -10,5 +10,8 @@ namespace Infrastructure.Entities {
         public Guid WishId {get; set;}
         public WishEntity Wish {get; set;}
 
+        public DateTime Time {get; set;}
+
+        public string Description { get; set; }
     }
 }

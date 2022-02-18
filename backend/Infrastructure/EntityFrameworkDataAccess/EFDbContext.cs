@@ -11,6 +11,11 @@ namespace Infrastructure.EntityFrameworkDataAccess {
 
         public DbSet<ReservationEntity> Reservations {get; set;}
 
+        public DbSet<EventEntity> Events {get; set;}
+
+        public DbSet<AccountEntity> Accounts {get; set;}
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             modelBuilder.Entity<UserEntity> ()
                 .ToTable ("Users");
